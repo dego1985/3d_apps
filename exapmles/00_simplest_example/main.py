@@ -5,7 +5,7 @@ import pyglet
 import pyglet.gl as gl
 from pyglet.math import Mat4, Vec3
 
-from module.shape import create_torus
+from module.shape import create_sphere, create_torus
 
 
 def get_args():
@@ -43,9 +43,9 @@ class App:
         shader = pyglet.model.get_default_shader()
         match model_name:
             case "torus":
-                self.torus_model = create_torus(
-                    1.0, 0.3, 50, 30, shader, self.batch
-                )
+                self.model = create_torus(1.0, 0.3, 50, 30, shader, self.batch)
+            case "sphere":
+                self.model = create_sphere(1.0, 30, 15, shader, self.batch)
             case _:
                 print(f"{model_name = } is not implemented")
                 raise NotImplementedError
@@ -79,7 +79,7 @@ class App:
         rot_y = Mat4.from_rotation(self.time / 2, Vec3(0, 1, 0))
         rot_z = Mat4.from_rotation(self.time / 4, Vec3(0, 0, 1))
         trans = Mat4.from_translation(Vec3(0.0, 0.0, -3.0))
-        self.torus_model.matrix = trans @ rot_x @ rot_y @ rot_z
+        self.model.matrix = trans @ rot_x @ rot_y @ rot_z
 
     def setup(self):
         # One-time GL setup
