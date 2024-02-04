@@ -78,7 +78,7 @@ class App:
         rot_x = Mat4.from_rotation(self.time, Vec3(1, 0, 0))
         rot_y = Mat4.from_rotation(self.time / 2, Vec3(0, 1, 0))
         rot_z = Mat4.from_rotation(self.time / 4, Vec3(0, 0, 1))
-        trans = Mat4.from_translation(Vec3(0.0, 0.0, -5.0))
+        trans = Mat4.from_translation(Vec3(0.0, 0.0, -3.0))
         self.torus_model.matrix = trans @ rot_x @ rot_y @ rot_z
 
     def setup(self):
