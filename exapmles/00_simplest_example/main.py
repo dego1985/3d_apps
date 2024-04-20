@@ -4,8 +4,9 @@ import argparse
 import pyglet
 import pyglet.gl as gl
 from pyglet.math import Mat4, Vec3
+from pyglet.gl.gl_compat import GL_COLOR_MATERIAL
 
-from module.shape import create_sphere, create_torus
+from module.shape import create_lines, create_sphere, create_torus
 
 
 def get_args():
@@ -46,6 +47,8 @@ class App:
                 self.model = create_torus(1.0, 0.3, 50, 30, shader, self.batch)
             case "sphere":
                 self.model = create_sphere(1.0, 30, 15, shader, self.batch)
+            case "lines":
+                self.model = create_lines(shader, self.batch)
             case _:
                 print(f"{model_name = } is not implemented")
                 raise NotImplementedError
@@ -84,12 +87,15 @@ class App:
     def setup(self):
         # One-time GL setup
         gl.glClearColor(1, 1, 1, 1)
+        # gl.glEnable(gl.GL_BLEND)
+        gl.glEnable(GL_COLOR_MATERIAL)
+
         gl.glEnable(gl.GL_DEPTH_TEST)
-        gl.glEnable(gl.GL_CULL_FACE)
+        # gl.glEnable(gl.GL_CULL_FACE)  # 表だけ描画
         self.on_resize(*self.window.size)
 
         # Uncomment this line for a wireframe view:
-        gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
+        # gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
 
 
 if __name__ == "__main__":
