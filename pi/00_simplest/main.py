@@ -6,8 +6,16 @@ from pyglet.gl import *
 
 try:
     # Try and create a window with multisampling (antialiasing)
-    config = Config(sample_buffers=1, samples=4, depth_size=16, double_buffer=True)
-    window = pyglet.window.Window(resizable=True, config=config)
+    config = Config(
+        sample_buffers=1,
+        samples=4,
+        depth_size=16,
+        double_buffer=True,
+    )
+    window = pyglet.window.Window(
+        resizable=True,
+        config=config,
+    )
 except pyglet.window.NoSuchConfigException:
     # Fall back to no multisampling for old hardware
     window = pyglet.window.Window(resizable=True)
@@ -29,6 +37,7 @@ def on_draw():
 
 def update(dt):
     global rx, ry, rz
+    # print(dt)
     rx += dt * 1
     ry += dt * 80
     rz += dt * 30
@@ -45,17 +54,23 @@ def setup():
     glEnable(GL_CULL_FACE)
 
     # Uncomment this line for a wireframe view
-    #glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+    # glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 
     # Simple light setup.  On Windows GL_LIGHT0 is enabled by default,
-    # but this is not the case on Linux or Mac, so remember to always 
+    # but this is not the case on Linux or Mac, so remember to always
     # include it.
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
     glEnable(GL_LIGHT1)
 
 
-def create_torus(radius, inner_radius, slices, inner_slices, batch):
+def create_torus(
+    radius,
+    inner_radius,
+    slices,
+    inner_slices,
+    batch,
+):
 
     # Create the vertex and normal arrays.
     vertices = []
@@ -63,16 +78,16 @@ def create_torus(radius, inner_radius, slices, inner_slices, batch):
 
     u_step = 2 * pi / (slices - 1)
     v_step = 2 * pi / (inner_slices - 1)
-    u = 0.
+    u = 0.0
     for i in range(slices):
         cos_u = cos(u)
         sin_u = sin(u)
-        v = 0.
+        v = 0.0
         for j in range(inner_slices):
             cos_v = cos(v)
             sin_v = sin(v)
 
-            d = (radius + inner_radius * cos_v)
+            d = radius + inner_radius * cos_v
             x = d * cos_u
             y = d * sin_u
             z = inner_radius * sin_v
@@ -100,15 +115,19 @@ def create_torus(radius, inner_radius, slices, inner_slices, batch):
     specular = [1.0, 1.0, 1.0, 1.0]
     emission = [0.0, 0.0, 0.0, 1.0]
     shininess = 50
-    material = pyglet.model.Material("", diffuse, ambient, specular, emission, shininess)
+    material = pyglet.model.Material(
+        "", diffuse, ambient, specular, emission, shininess
+    )
     group = pyglet.model.MaterialGroup(material=material)
 
-    vertex_list = batch.add_indexed(len(vertices)//3,
-                                    GL_TRIANGLES,
-                                    group,
-                                    indices,
-                                    ('v3f/static', vertices),
-                                    ('n3f/static', normals))
+    vertex_list = batch.add_indexed(
+        len(vertices) // 3,
+        GL_TRIANGLES,
+        group,
+        indices,
+        ("v3f/static", vertices),
+        ("n3f/static", normals),
+    )
 
     return pyglet.model.Model([vertex_list], [group], batch)
 
